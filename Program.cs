@@ -5,15 +5,25 @@ class Program
     static void Main(string[] args)
     {   
         #nullable disable
+        
+        PrintWelcomeMessage();        
+        PerformCalculations();        
+    }
+
+    private static void PrintWelcomeMessage()
+    {
         Console.WriteLine("");
         Console.WriteLine("Welcome to the calculator!");
         Console.WriteLine("==========================");
         Console.WriteLine("");
+    }
 
-        Console.Write("Please enter the operator: ");
+    private static void PerformCalculations(){
         double counter = 0;
         double sumNumbers = 0;
         string message;
+
+        Console.Write("Please enter the operator: ");
         string operation = Console.ReadLine();
         
         if(operation != "+" & operation != "-" & operation != "*" & operation != "/")
@@ -30,7 +40,11 @@ class Program
                 if(operation == "+"){
                     sumNumbers += Double.Parse(Console.ReadLine());
                 } else if(operation == "-"){
-                    sumNumbers -= Double.Parse(Console.ReadLine());
+                    if(i == 1){
+                        sumNumbers =  Double.Parse(Console.ReadLine());
+                    } else {
+                        sumNumbers -= Double.Parse(Console.ReadLine());
+                    }
                 } else if(operation == "*"){
                     sumNumbers *= Double.Parse(Console.ReadLine());
                 } else if(operation == "/"){
@@ -45,21 +59,3 @@ class Program
         }        
     }
 }
-
-/* Console.Write("Please type your first number: ");
-            firstNumber = Double.Parse(Console.ReadLine());
-
-            Console.Write("Please type your second number: ");
-            secondNumber = Double.Parse(Console.ReadLine());
-
-            if(operation == "+")
-                result = firstNumber + secondNumber;
-             else if(operation == "-")
-                result = firstNumber - secondNumber;
-             else if(operation == "*")
-                result = firstNumber * secondNumber;
-             else {
-                result = firstNumber / secondNumber;
-             }
-            message = String.Format("The result of {0} {1} {2} is {3}", firstNumber, operation, secondNumber, result);
- */
