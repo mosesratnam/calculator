@@ -38,27 +38,43 @@ class Program
             if(operation == "+" || operation == "-" || operation == "*" || operation == "/"){
                 displayMenu = false;
             }
+            Console.Clear();
         }
         return operation;
     }    
 
     private static string GetCounter(string operation){
-        Console.Write("How many numbers do you want to {0}? ", operation);
-        string userInput = Console.ReadLine();
-        CheckExitProgram(userInput); 
-        return userInput;
+        bool displayMessage = true;
+        string userInput = "";
+        bool valid = true;
+        
+        while (displayMessage)
+        {
+            Console.Write("How many numbers do you want to {0}? ", operation);
+            userInput = Console.ReadLine();
+            displayMessage = CheckNumber(valid, userInput);
+            CheckExitProgram(userInput); 
+            Console.Clear();    
+        } 
+        return userInput;  
     }    
 
     private static void GetNumbers(int counter, string operation){
-        
+        string userInput = "";
+        bool valid = true; 
         int[] numbersArray = new int[counter];
 
         for (int i = 0; i < numbersArray.Length; i++)
         {   
-            Console.Write("Please enter number {0}? ", i + 1);
-            numbersArray[i] = int.Parse(Console.ReadLine());
+            bool displayMessage = true;
+            while (displayMessage)
+            {
+                Console.Write("Please enter number {0}? ", i + 1);
+                userInput = Console.ReadLine();
+                displayMessage = CheckNumber(valid, userInput); 
+            }
+                numbersArray[i] = int.Parse(userInput);        
         }
-
         PerformCalculations(numbersArray, operation);
     }
 
@@ -97,4 +113,13 @@ class Program
             Environment.Exit(0);
         }
     }
+
+    private static bool CheckNumber(bool valid, string num){
+        int answer;
+        if(int.TryParse(num, out answer)){
+            return false;
+        }else {
+            return true;
+        }
+    } 
 }
