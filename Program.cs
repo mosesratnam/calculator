@@ -5,9 +5,18 @@ class Program
     static void Main(string[] args)
     {   
         #nullable disable
+        string operation = "";
+        int counter;
+        bool run = true;
         
-        PrintWelcomeMessage();        
-        PerformCalculations();        
+        PrintWelcomeMessage();  
+
+        while (run)
+        {
+            operation = GetOperation();
+            counter = int.Parse(GetCounter(operation));
+            GetNumbers(counter, operation);  
+        }
     }
 
     private static void PrintWelcomeMessage()
@@ -18,44 +27,74 @@ class Program
         Console.WriteLine("");
     }
 
-    private static void PerformCalculations(){
-        double counter = 0;
-        double sumNumbers = 0;
-        string message;
-
-        Console.Write("Please enter the operator: ");
-        string operation = Console.ReadLine();
-        
-        if(operation != "+" & operation != "-" & operation != "*" & operation != "/")
-            message = "Please enter either +, -, * or /.";
-        else {
-            if (operation == "*"){
-                sumNumbers = 1;
+    private static string GetOperation(){
+        bool displayMenu = true;
+        string operation = "";
+        while (displayMenu)
+        {
+            Console.Write("Please enter a valid operator: ");
+            operation = Console.ReadLine();
+            CheckExitProgram(operation);
+            if(operation == "+" || operation == "-" || operation == "*" || operation == "/"){
+                displayMenu = false;
             }
-            Console.Write("How many numbers do you want to {0}? ", operation);
-            counter = Double.Parse(Console.ReadLine());
-            for (int i = 1; i <= counter; i++)
-            {                
-                Console.Write("Please enter number {0}? ", i);
-                if(operation == "+"){
-                    sumNumbers += Double.Parse(Console.ReadLine());
+        }
+        return operation;
+    }    
+
+    private static string GetCounter(string operation){
+        Console.Write("How many numbers do you want to {0}? ", operation);
+        string userInput = Console.ReadLine();
+        CheckExitProgram(userInput); 
+        return userInput;
+    }    
+
+    private static void GetNumbers(int counter, string operation){
+        
+        int[] numbersArray = new int[counter];
+
+        for (int i = 0; i < numbersArray.Length; i++)
+        {   
+            Console.Write("Please enter number {0}? ", i + 1);
+            numbersArray[i] = int.Parse(Console.ReadLine());
+        }
+
+        PerformCalculations(numbersArray, operation);
+    }
+
+    private static void PerformCalculations(int[] numbersArray, string operation){
+        double sumNumbers = 0;
+        
+        if (operation == "*"){
+            sumNumbers = 1;
+        }
+
+        for (int i = 0; i < numbersArray.Length; i++)
+        {   
+            if(operation == "+"){
+                    sumNumbers += numbersArray[i];
                 } else if(operation == "-"){
-                    if(i == 1){
-                        sumNumbers =  Double.Parse(Console.ReadLine());
+                    if(i == 0){
+                        sumNumbers =  numbersArray[i];
                     } else {
-                        sumNumbers -= Double.Parse(Console.ReadLine());
+                        sumNumbers -= numbersArray[i];
                     }
                 } else if(operation == "*"){
-                    sumNumbers *= Double.Parse(Console.ReadLine());
+                    sumNumbers *= numbersArray[i];
                 } else if(operation == "/"){
-                    if(i == 1){
-                        sumNumbers = Double.Parse(Console.ReadLine());
+                    if(i == 0){
+                        sumNumbers = numbersArray[i];
                     } else {
-                        sumNumbers /= Double.Parse(Console.ReadLine());
+                        sumNumbers /= numbersArray[i];
                     }
-                }
-            }
-            Console.WriteLine("The answer is {0}", sumNumbers);
-        }        
+                }           
+        }
+        Console.WriteLine("The answer is {0}", sumNumbers);
+    } 
+
+    private static void CheckExitProgram(string operation){
+        if(operation == "E"){
+            Environment.Exit(0);
+        }
     }
 }
