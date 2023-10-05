@@ -1,4 +1,6 @@
-﻿namespace Calculator;
+﻿using System.Runtime.CompilerServices;
+
+namespace Calculator;
 
 class Program
 {
@@ -6,6 +8,9 @@ class Program
     {   
         #nullable disable
         string operation = "";
+        DateTime date;
+        DateTime endDate;
+        int daysToAdd;
         int counter;
         bool run = true;
         
@@ -13,9 +18,17 @@ class Program
 
         while (run)
         {
-            operation = GetOperation();
-            counter = int.Parse(GetCounter(operation));
-            GetNumbers(counter, operation);  
+            if(GetMode(0) == 1){
+                operation = GetOperation();
+                counter = int.Parse(GetCounter(operation));
+                GetNumbers(counter, operation);                 
+            } else {
+                date = GetDate();  
+                daysToAdd = GetDaysToAdd();
+                endDate = CalculateDate(date, daysToAdd);
+                DisplayDate(endDate);
+            }
+             
         }
     }
 
@@ -25,6 +38,22 @@ class Program
         Console.WriteLine("Welcome to the calculator!");
         Console.WriteLine("==========================");
         Console.WriteLine("");
+    }
+
+    private static int GetMode(int num){
+        bool displayMessage = true;
+        string userInput = "";
+
+        while (displayMessage)
+        {
+            Console.WriteLine("Please choose a calculator mode?");
+            Console.WriteLine("1 = Numbers");
+            Console.WriteLine("2 = Dates");
+            userInput = Console.ReadLine();
+            CheckExitProgram(userInput);
+            if(CheckNumber(0, userInput) > 0 & CheckNumber(0, userInput) < 3) displayMessage = false;
+        }
+        return int.Parse(userInput);
     }
 
     private static string GetOperation(){
@@ -52,7 +81,7 @@ class Program
         {
             Console.Write("How many numbers do you want to {0}? ", operation);
             userInput = Console.ReadLine();
-            displayMessage = CheckNumber(valid, userInput);
+            if(CheckNumber(0, userInput) > 0) displayMessage = false; 
             CheckExitProgram(userInput); 
             Console.Clear();    
         } 
@@ -69,9 +98,10 @@ class Program
             bool displayMessage = true;
             while (displayMessage)
             {
+                int number;
                 Console.Write("Please enter number {0}? ", i + 1);
                 userInput = Console.ReadLine();
-                displayMessage = CheckNumber(valid, userInput); 
+                if(CheckNumber(0, userInput) > 0) displayMessage = false;
             }
                 numbersArray[i] = int.Parse(userInput);        
         }
@@ -106,6 +136,7 @@ class Program
                 }           
         }
         Console.WriteLine("The answer is {0}", sumNumbers);
+        Console.WriteLine();
     } 
 
     private static void CheckExitProgram(string operation){
@@ -114,12 +145,46 @@ class Program
         }
     }
 
-    private static bool CheckNumber(bool valid, string num){
-        int answer;
-        if(int.TryParse(num, out answer)){
-            return false;
-        }else {
-            return true;
+    private static int CheckNumber(int num, string userInput){
+        bool success = int.TryParse(userInput, out num);
+        return num;
+    }
+
+    private static DateTime GetDate(){
+        DateTime date = DateTime.Today;
+        string userInput;
+        bool displayMessage = true;
+
+        Console.WriteLine("Please enter a date: ");
+        while (displayMessage)
+        {
+            userInput = Console.ReadLine();
+            CheckExitProgram(userInput); 
+            if(DateTime.TryParse(userInput, out date)) displayMessage = false;
         }
-    } 
+        return date;
+    }
+
+    private static int GetDaysToAdd(){
+        bool displayMessage = true;
+        string userInput = "";
+
+        while (displayMessage)
+        {   
+            Console.WriteLine("Plese enter the number of days to add: ");            
+            userInput = Console.ReadLine();
+            CheckExitProgram(userInput);
+            if(CheckNumber(0, userInput) > 0) displayMessage = false;
+        }
+        return int.Parse(userInput );
+    }
+
+    private static DateTime CalculateDate(DateTime date, int daysToAdd){
+        return date.AddDays(daysToAdd);
+    }
+
+    private static void DisplayDate(DateTime date){
+        Console.WriteLine("The answer is {0}", date.ToShortDateString());
+        Console.WriteLine();
+    }
 }
