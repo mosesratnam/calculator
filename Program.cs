@@ -27,17 +27,17 @@ class Program
     }
 
     private static int GetMode(int num){
-        bool displayMessage = true;
+        bool display = true;
         string userInput = "";
 
-        while (displayMessage)
+        while (display)
         {
             Console.WriteLine("Please choose a calculator mode?");
             Console.WriteLine("1 = Numbers");
             Console.WriteLine("2 = Dates");
             userInput = Console.ReadLine();
             CheckExitProgram(userInput);
-            if(CheckNumber(0, userInput) > 0 & CheckNumber(0, userInput) < 3) displayMessage = false;
+            if(CheckNumber(0, userInput) > 0 & CheckNumber(0, userInput) < 3) display = false;
         }
         return int.Parse(userInput);
     }
@@ -45,22 +45,26 @@ class Program
     private static void NumbersMode(){
         string operation = "";
         int counter;
+        double result = 0;
 
         operation = GetOperation();
         counter = int.Parse(GetCounter(operation));
-        GetNumbers(counter, operation);  
+        int[] array = new int[counter];
+        int[] numbersArray = GetNumbers(array);
+        result = PerformCalculations(result, numbersArray, operation);
+        DisplayNumbersResult(result);
     }
 
     private static string GetOperation(){
-        bool displayMenu = true;
+        bool display = true;
         string operation = "";
-        while (displayMenu)
+        while (display)
         {
             Console.Write("Please enter a valid operator: ");
             operation = Console.ReadLine();
             CheckExitProgram(operation);
             if(operation == "+" || operation == "-" || operation == "*" || operation == "/"){
-                displayMenu = false;
+                display = false;
             }
             Console.Clear();
         }
@@ -68,71 +72,69 @@ class Program
     }    
 
     private static string GetCounter(string operation){
-        bool displayMessage = true;
+        bool display = true;
         string userInput = "";
-        bool valid = true;
-        
-        while (displayMessage)
+                
+        while (display)
         {
             Console.Write("How many numbers do you want to {0}? ", operation);
             userInput = Console.ReadLine();
-            if(CheckNumber(0, userInput) > 0) displayMessage = false; 
+            if(CheckNumber(0, userInput) > 0) display = false; 
             CheckExitProgram(userInput); 
             Console.Clear();    
         } 
         return userInput;  
     }    
 
-    private static void GetNumbers(int counter, string operation){
+    private static int[] GetNumbers(int[] numbersArray){
         string userInput = "";
-        bool valid = true; 
-        int[] numbersArray = new int[counter];
 
         for (int i = 0; i < numbersArray.Length; i++)
         {   
-            bool displayMessage = true;
-            while (displayMessage)
+            bool display = true;
+            while (display)
             {
-                int number;
                 Console.Write("Please enter number {0}? ", i + 1);
                 userInput = Console.ReadLine();
-                if(CheckNumber(0, userInput) > 0) displayMessage = false;
+                if(CheckNumber(0, userInput) > 0) display = false;
             }
                 numbersArray[i] = int.Parse(userInput);        
         }
-        PerformCalculations(numbersArray, operation);
+        return numbersArray;
     }
 
-    private static void PerformCalculations(int[] numbersArray, string operation){
-        double sumNumbers = 0;
-        
+    private static double PerformCalculations(double result, int[] numbersArray, string operation){
         if (operation == "*"){
-            sumNumbers = 1;
+            result = 1;
         }
 
         for (int i = 0; i < numbersArray.Length; i++)
         {   
             if(operation == "+"){
-                    sumNumbers += numbersArray[i];
+                    result += numbersArray[i];
                 } else if(operation == "-"){
                     if(i == 0){
-                        sumNumbers =  numbersArray[i];
+                        result =  numbersArray[i];
                     } else {
-                        sumNumbers -= numbersArray[i];
+                        result -= numbersArray[i];
                     }
                 } else if(operation == "*"){
-                    sumNumbers *= numbersArray[i];
+                    result *= numbersArray[i];
                 } else if(operation == "/"){
                     if(i == 0){
-                        sumNumbers = numbersArray[i];
+                        result = numbersArray[i];
                     } else {
-                        sumNumbers /= numbersArray[i];
+                        result /= numbersArray[i];
                     }
                 }           
         }
-        Console.WriteLine("The answer is {0}", sumNumbers);
+        return result;
+    }
+
+    private static void DisplayNumbersResult(double result){
+        Console.WriteLine("The answer is {0}", result);
         Console.WriteLine();
-    } 
+    }
 
     private static void DatesMode(){
         DateTime date;
@@ -161,15 +163,15 @@ class Program
     }
 
     private static int GetDaysToAdd(){
-        bool displayMessage = true;
+        bool display = true;
         string userInput = "";
 
-        while (displayMessage)
+        while (display)
         {   
             Console.WriteLine("Plese enter the number of days to add: ");            
             userInput = Console.ReadLine();
             CheckExitProgram(userInput);
-            if(CheckNumber(0, userInput) > 0) displayMessage = false;
+            if(CheckNumber(0, userInput) > 0) display = false;
         }
         return int.Parse(userInput );
     }
@@ -193,9 +195,6 @@ class Program
     private static int CheckNumber(int num, string userInput){
         bool success = int.TryParse(userInput, out num);
         return num;
-    }
-
-    
-
-    }
+    }   
+}
 
