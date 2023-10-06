@@ -6,29 +6,15 @@ class Program
 {
     static void Main(string[] args)
     {   
-        #nullable disable
-        string operation = "";
-        DateTime date;
-        DateTime endDate;
-        int daysToAdd;
-        int counter;
-        bool run = true;
-        
+        #nullable disable                       
         PrintWelcomeMessage();  
-
-        while (run)
+        while (true)
         {
             if(GetMode(0) == 1){
-                operation = GetOperation();
-                counter = int.Parse(GetCounter(operation));
-                GetNumbers(counter, operation);                 
+                NumbersMode();
             } else {
-                date = GetDate();  
-                daysToAdd = GetDaysToAdd();
-                endDate = CalculateDate(date, daysToAdd);
-                DisplayDate(endDate);
-            }
-             
+                DatesMode();
+            }             
         }
     }
 
@@ -54,6 +40,15 @@ class Program
             if(CheckNumber(0, userInput) > 0 & CheckNumber(0, userInput) < 3) displayMessage = false;
         }
         return int.Parse(userInput);
+    }
+
+    private static void NumbersMode(){
+        string operation = "";
+        int counter;
+
+        operation = GetOperation();
+        counter = int.Parse(GetCounter(operation));
+        GetNumbers(counter, operation);  
     }
 
     private static string GetOperation(){
@@ -139,15 +134,15 @@ class Program
         Console.WriteLine();
     } 
 
-    private static void CheckExitProgram(string operation){
-        if(operation == "E"){
-            Environment.Exit(0);
-        }
-    }
+    private static void DatesMode(){
+        DateTime date;
+        DateTime endDate;
+        int daysToAdd;
 
-    private static int CheckNumber(int num, string userInput){
-        bool success = int.TryParse(userInput, out num);
-        return num;
+        date = GetDate();  
+        daysToAdd = GetDaysToAdd();
+        endDate = CalculateDate(date, daysToAdd);
+        DisplayDate(endDate);
     }
 
     private static DateTime GetDate(){
@@ -187,4 +182,20 @@ class Program
         Console.WriteLine("The answer is {0}", date.ToShortDateString());
         Console.WriteLine();
     }
-}
+
+
+    private static void CheckExitProgram(string operation){
+        if(operation == "E"){
+            Environment.Exit(0);
+        }
+    }
+
+    private static int CheckNumber(int num, string userInput){
+        bool success = int.TryParse(userInput, out num);
+        return num;
+    }
+
+    
+
+    }
+
