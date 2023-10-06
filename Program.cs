@@ -11,9 +11,9 @@ class Program
         while (true)
         {
             if(GetMode(0) == 1){
-                NumbersMode();
+                NumbersCalculator.NumbersMode();
             } else {
-                DatesMode();
+                DatesCalculator.DatesMode();
             }             
         }
     }
@@ -22,8 +22,7 @@ class Program
     {
         Console.WriteLine("");
         Console.WriteLine("Welcome to the calculator!");
-        Console.WriteLine("==========================");
-        Console.WriteLine("");
+        Console.WriteLine("==========================");        
     }
 
     private static int GetMode(int num){
@@ -32,6 +31,7 @@ class Program
 
         while (display)
         {
+            Console.WriteLine("");
             Console.WriteLine("Please choose a calculator mode?");
             Console.WriteLine("1 = Numbers");
             Console.WriteLine("2 = Dates");
@@ -42,7 +42,23 @@ class Program
         return int.Parse(userInput);
     }
 
-    private static void NumbersMode(){
+    
+    
+
+    public static void CheckExitProgram(string operation){
+        if(operation == "E"){
+            Environment.Exit(0);
+        }
+    }
+
+    public static int CheckNumber(int num, string userInput){
+        bool success = int.TryParse(userInput, out num);
+        return num;
+    }   
+}
+
+class NumbersCalculator {
+    public static void NumbersMode(){
         string operation = "";
         int counter;
         double result = 0;
@@ -62,7 +78,7 @@ class Program
         {
             Console.Write("Please enter a valid operator: ");
             operation = Console.ReadLine();
-            CheckExitProgram(operation);
+            Program.CheckExitProgram(operation);
             if(operation == "+" || operation == "-" || operation == "*" || operation == "/"){
                 display = false;
             }
@@ -79,8 +95,8 @@ class Program
         {
             Console.Write("How many numbers do you want to {0}? ", operation);
             userInput = Console.ReadLine();
-            if(CheckNumber(0, userInput) > 0) display = false; 
-            CheckExitProgram(userInput); 
+            if(Program.CheckNumber(0, userInput) > 0) display = false; 
+            Program.CheckExitProgram(userInput); 
             Console.Clear();    
         } 
         return userInput;  
@@ -96,7 +112,7 @@ class Program
             {
                 Console.Write("Please enter number {0}? ", i + 1);
                 userInput = Console.ReadLine();
-                if(CheckNumber(0, userInput) > 0) display = false;
+                if(Program.CheckNumber(0, userInput) > 0) display = false;
             }
                 numbersArray[i] = int.Parse(userInput);        
         }
@@ -135,8 +151,10 @@ class Program
         Console.WriteLine("The answer is {0}", result);
         Console.WriteLine();
     }
+}
 
-    private static void DatesMode(){
+class DatesCalculator {
+    public static void DatesMode(){
         DateTime date;
         DateTime endDate;
         int daysToAdd;
@@ -156,7 +174,7 @@ class Program
         while (displayMessage)
         {
             userInput = Console.ReadLine();
-            CheckExitProgram(userInput); 
+            Program.CheckExitProgram(userInput); 
             if(DateTime.TryParse(userInput, out date)) displayMessage = false;
         }
         return date;
@@ -170,8 +188,8 @@ class Program
         {   
             Console.WriteLine("Plese enter the number of days to add: ");            
             userInput = Console.ReadLine();
-            CheckExitProgram(userInput);
-            if(CheckNumber(0, userInput) > 0) display = false;
+            Program.CheckExitProgram(userInput);
+            if(Program.CheckNumber(0, userInput) > 0) display = false;
         }
         return int.Parse(userInput );
     }
@@ -184,17 +202,4 @@ class Program
         Console.WriteLine("The answer is {0}", date.ToShortDateString());
         Console.WriteLine();
     }
-
-
-    private static void CheckExitProgram(string operation){
-        if(operation == "E"){
-            Environment.Exit(0);
-        }
-    }
-
-    private static int CheckNumber(int num, string userInput){
-        bool success = int.TryParse(userInput, out num);
-        return num;
-    }   
 }
-
